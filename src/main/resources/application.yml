@@ -22,6 +22,8 @@ spring:
     user: admin
     password: 123456
     send-timeout: # 傳送超時時間
+    packages:
+      trust-all: true
     pool:
       enabled: false # 是否建立 JmsPoolConnectionFactory 連線池
       idle-timeout: 30s # 空閒連線超時時間

@@ -1,21 +1,20 @@
 package com.example.genesis.data.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+import java.io.Serializable;
 
 @Getter
 @Setter
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-public class Order {
+@Table(name = "user_order")
+@ToString
+public class Order implements Serializable {
+
+    static final long serialVersionUid= 1l;
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Integer id;
