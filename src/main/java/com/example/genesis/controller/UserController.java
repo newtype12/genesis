@@ -5,10 +5,7 @@ import com.example.genesis.service.UserService;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -29,6 +26,21 @@ public class UserController {
     @GetMapping()
     public User getUser(@RequestParam Integer id) {
         return service.getUser(id);
+    }
+
+    @PostMapping("/login")
+    public User login(@RequestParam Integer id) {
+        return service.login(id);
+    }
+
+    @PostMapping("/logout")
+    public Integer logout(@RequestParam Integer id) {
+        return service.logout(id);
+    }
+
+    @PostMapping("/complete")
+    public User complete(@RequestParam Integer id) {
+        return service.login(id);
     }
 
 }

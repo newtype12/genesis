@@ -25,7 +25,7 @@ public class Producer {
     /**
      * 傳送訊息（定時傳送佇列）
      */
-    static int i = 100;
+
     Destination destination = new ActiveMQQueue("order-queue");
 
     @Scheduled(fixedDelay = 3000) // 5s執行一次   只有無參的方法才能用該註解
