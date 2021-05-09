@@ -15,7 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/v1/front")
-@Api(tags = "test")
+@Api(tags = "front")
 @Slf4j
 @RequiredArgsConstructor
 public class FrontController {

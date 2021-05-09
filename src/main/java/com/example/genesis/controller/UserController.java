@@ -14,7 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/v1/user")
-@Api(tags = "test")
+@Api(tags = "user")
 @Slf4j
 @RequiredArgsConstructor
 public class UserController {
@@ -24,6 +24,11 @@ public class UserController {
     @GetMapping("/search")
     public List<User> getUsers() {
         return service.getUsers();
+    }
+
+    @GetMapping()
+    public User getUser(@RequestParam Integer id) {
+        return service.getUser(id);
     }
 
 }

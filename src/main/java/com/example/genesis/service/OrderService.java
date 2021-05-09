@@ -12,12 +12,12 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
 
+
+
     public void createOrder(OrderBo bo) {
         int result=orderRepository.insertOrder(bo.getContent(), bo.getName(), bo.getTitle());
         if(result>0){
             //todo 塞mq
         }
-
-
     }
 }
