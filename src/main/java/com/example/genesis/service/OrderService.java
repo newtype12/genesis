@@ -16,10 +16,8 @@ public class OrderService {
     private final Producer producer;
 
     public void createOrder(OrderBo bo) {
-//        int result=orderRepository.insertOrder(bo.getContent(), bo.getName(), bo.getTitle());
-
-        Order result=orderRepository.save(new Order(null,bo.getName(), bo.getTitle(),bo.getContent(),0,null,0 ));
-        if(result!=null){
+        Order result = orderRepository.save(new Order(null, bo.getName(), bo.getTitle(), bo.getContent(), 0, null, 0));
+        if (result != null) {
             producer.convertAndSend(result);
         }
     }

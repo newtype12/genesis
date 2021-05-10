@@ -1,7 +1,7 @@
 package com.example.genesis.controller;
 
 import com.example.genesis.bo.OrderBo;
-import com.example.genesis.data.entity.User;
+import com.example.genesis.queue.InternalOrderQueue;
 import com.example.genesis.service.OrderService;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
@@ -22,9 +22,16 @@ public class FrontController {
 
     private final OrderService orderService;
 
+    private final InternalOrderQueue internalQueue;
+
     @PostMapping("order/create")
     public void getUsers(OrderBo bo) {
         orderService.createOrder(bo);
+    }
+
+    @GetMapping("order")
+    public void showQueue() {
+        internalQueue.show();
     }
 
 }
