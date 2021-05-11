@@ -5,39 +5,37 @@ import com.example.genesis.service.UserService;
 import com.example.genesis.util.RedisSetUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.activemq.ActiveMQMessageConsumer;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.core.JmsTemplate;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
 
 import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.ObjectMessage;
-import java.util.Enumeration;
 import java.util.concurrent.CountDownLatch;
 
 @Component
 @Slf4j
 @RequiredArgsConstructor
-public class Consumer  implements  MessageListener{
+public class Consumer{
     private final UserService userService;
     private final RedisSetUtil redisSetUtil;
+    private final JmsTemplate jmsTemplate;
     private CountDownLatch latch = new CountDownLatch(1);
 
-    @JmsListener(destination = "order-queue")
-    public void onMessage(Message message) {
+    @Scheduled(initialDelay = 1000, fixedDelay = 2000)
+    public void onMessage() {
         try {
-            // check user first
+           // check user first
             Integer handlerId = redisSetUtil.getAvailableUserID();
             if (handlerId > 0) {
-                ObjectMessage objectMessage = (ObjectMessage) message;
+                ObjectMessage objectMessage = (ObjectMessage) jmsTemplate.receive("order-queue");
                 Order order = (Order) objectMessage.getObject();
-                //do additional processing
                 log.info("user: {} handle Received Message: {}", handlerId, order.toString());
                 latch.countDown();
             }
-            log.info("all user are busy , wait !");
 
         } catch (Exception e) {
             log.error("Received Exception : " + e);

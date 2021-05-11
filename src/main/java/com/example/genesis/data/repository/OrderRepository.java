@@ -8,9 +8,15 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 public interface OrderRepository extends JpaRepository<Order, Integer> {
     @Transactional
     @Modifying
     @Query(value ="INSERT INTO `order`(content, customer_name, title) values (:content, :name , :title);", nativeQuery = true)
     public int insertOrder(@Param("content") String content, @Param("name") String name, @Param("title") String title);
+
+    @Query(value = "select o from Order o where o.status=:status")
+    List<Order> getUndoneOrder(@Param("status") Integer status);
+
 }

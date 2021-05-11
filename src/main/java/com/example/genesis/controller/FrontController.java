@@ -6,6 +6,7 @@ import com.example.genesis.service.OrderService;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.jms.core.JmsTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,8 +23,6 @@ public class FrontController {
 
     private final OrderService orderService;
 
-    private final InternalOrderQueue internalQueue;
-
     @PostMapping("order/create")
     public void getUsers(OrderBo bo) {
         orderService.createOrder(bo);
@@ -31,7 +30,7 @@ public class FrontController {
 
     @GetMapping("order")
     public void showQueue() {
-        internalQueue.show();
+        System.out.println(orderService.checkQueue("order-queue"));
     }
 
 }
