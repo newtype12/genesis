@@ -39,8 +39,8 @@ public class UserController {
     }
 
     @PostMapping("/complete")
-    public User complete(@RequestParam Integer id) {
-        return service.login(id);
+    public Boolean complete(@RequestParam Integer id) {
+        return service.complete(id);
     }
 
 }

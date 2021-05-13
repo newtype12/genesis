@@ -17,4 +17,14 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Modifying
     @Query("update User u set u.status=0 where u.id=:id")
     Integer logout(Integer id);
+
+    @Transactional
+    @Modifying
+    @Query("update User u set u.orderId=:orderId where u.id=:id")
+    Integer updateOrder(Integer id, Integer orderId);
+
+    @Transactional
+    @Modifying
+    @Query("update User u set u.orderId= null where u.id=:id")
+    Integer clearOrder(Integer id);
 }

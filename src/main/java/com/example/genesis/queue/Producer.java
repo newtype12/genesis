@@ -11,30 +11,34 @@ import org.springframework.jms.core.JmsTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import javax.jms.Destination;
+import java.util.Enumeration;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class Producer {
     private final JmsTemplate jmsTemplate;
-    private final static Destination destination = new ActiveMQQueue("order-queue");
+    private final static String queueName = "order-queue";
+    private final static Destination destination = new ActiveMQQueue(queueName);
 
     @Autowired
     private OrderRepository orderRepository;
 
-    @Scheduled(initialDelay = 10000, fixedDelay = 500000)
+    //開啟服務把db未處裡的訂單撈到queue
+    @PostConstruct
     public void getUndoneMessage() {
         List<Order> orders = this.getUndone();
         if (orders.size() > 0) {
             for (Order o : orders) {
                 convertAndSend(o);
             }
+            System.out.println(this.checkQueue(queueName));
         }
     }
 
     public void convertAndSend(Object message) {
-
         jmsTemplate.convertAndSend(destination, message);
     }
 
@@ -42,4 +46,15 @@ public class Producer {
         return orderRepository.getUndoneOrder(0);
     }
 
+    public String checkQueue(String queue) {
+        return jmsTemplate.browse(queue, (session, browser) -> {
+            Enumeration<?> messages = browser.getEnumeration();
+            int total = 0;
+            while (messages.hasMoreElements()) {
+                messages.nextElement();
+                total++;
+            }
+            return String.format("Total '%d elements waiting in %s", total, queue);
+        });
+    }
 }

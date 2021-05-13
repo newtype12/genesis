@@ -16,37 +16,26 @@ public class RedisSetUtil {
 
     public void add(Integer key, Integer value) {
         SetOperations<String, Integer> set = redisTemplate.opsForSet();
-        StringBuilder sb = new StringBuilder("role-"+key);
-        set.add(sb.toString(),value);
+        StringBuilder sb = new StringBuilder("role-" + key);
+        set.add(sb.toString(), value);
     }
 
     public void remove(Integer key, Integer value) {
         SetOperations<String, Integer> set = redisTemplate.opsForSet();
-        StringBuilder sb = new StringBuilder("role-"+key);
-        set.remove(sb.toString(),value);
+        StringBuilder sb = new StringBuilder("role-" + key);
+        set.remove(sb.toString(), value);
     }
 
-    public Integer pop(Integer key){
-        StringBuilder sb = new StringBuilder("role-"+key);
+    public Integer pop(Integer key) {
+        StringBuilder sb = new StringBuilder("role-" + key);
         return (Integer) redisTemplate.opsForSet().randomMember(sb.toString());
     }
 
-    public void check(Integer key){
+    public Integer getSetSize(String setName) {
+        return redisTemplate.opsForSet().size(setName).intValue();    }
 
-        StringBuilder sb = new StringBuilder("role-"+key);
-        System.out.println(redisTemplate.opsForSet().members(sb.toString()));
-    }
-
-    public Integer getAvailableUserID(){
-
-        if(redisTemplate.opsForSet().size("role-1")>0){
-            return (Integer)redisTemplate.opsForSet().pop("role-1");
-        }else if(redisTemplate.opsForSet().size("role-2")>0){
-            return (Integer)redisTemplate.opsForSet().pop("role-2");
-        }else if(redisTemplate.opsForSet().size("role-3")>0){
-            return (Integer)redisTemplate.opsForSet().pop("role-3");
-        }
-        return 0;
+    public Integer popSet(String setName) {
+        return (Integer) redisTemplate.opsForSet().pop(setName);
     }
 
 }

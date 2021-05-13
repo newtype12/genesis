@@ -1,6 +1,7 @@
 package com.example.genesis.queue;
 
 import com.example.genesis.data.entity.Order;
+import com.example.genesis.service.OrderService;
 import com.example.genesis.service.UserService;
 import com.example.genesis.util.RedisSetUtil;
 import lombok.RequiredArgsConstructor;
@@ -19,21 +20,30 @@ import java.util.concurrent.CountDownLatch;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-public class Consumer{
+public class Consumer {
     private final UserService userService;
+    private final OrderService orderService;
     private final RedisSetUtil redisSetUtil;
     private final JmsTemplate jmsTemplate;
     private CountDownLatch latch = new CountDownLatch(1);
 
-    @Scheduled(initialDelay = 1000, fixedDelay = 2000)
+
+    /**
+     * 當redis找到有空的使用者
+     */
+    @Scheduled(initialDelay = 1000, fixedDelay = 1000)
     public void onMessage() {
         try {
-           // check user first
-            Integer handlerId = redisSetUtil.getAvailableUserID();
+            // check user first
+            Integer handlerId = userService.getAvailableUserID();
             if (handlerId > 0) {
                 ObjectMessage objectMessage = (ObjectMessage) jmsTemplate.receive("order-queue");
                 Order order = (Order) objectMessage.getObject();
-                log.info("user: {} handle Received Message: {}", handlerId, order.toString());
+                if (order.getStatus() == 0) {
+                    log.info("user: {} handle Received Message: {}", handlerId, order.toString());
+                    userService.updateOrderId(handlerId, order.getId());
+                    orderService.updateOrderStatus(order.getId(), 1, handlerId);
+                }
                 latch.countDown();
             }
 

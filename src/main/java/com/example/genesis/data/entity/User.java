@@ -17,7 +17,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class User implements Serializable {
 
-    static final long serialVersionUid= 1l;
+    static final long serialVersionUid = 1l;
 
     @Id
     private Integer id;
@@ -26,8 +26,10 @@ public class User implements Serializable {
 
     private String pw;
 
-    private  Integer role;
+    private Integer role;
 
     private Integer status;
 
+    @Column(name = "order_id")
+    private Integer orderId;
 }

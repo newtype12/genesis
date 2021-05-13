@@ -2,6 +2,7 @@ package com.example.genesis.controller;
 
 import com.example.genesis.bo.OrderBo;
 import com.example.genesis.queue.InternalOrderQueue;
+import com.example.genesis.queue.Producer;
 import com.example.genesis.service.OrderService;
 import io.swagger.annotations.Api;
 import lombok.RequiredArgsConstructor;
@@ -23,14 +24,16 @@ public class FrontController {
 
     private final OrderService orderService;
 
+    private final Producer producer;
+
     @PostMapping("order/create")
-    public void getUsers(OrderBo bo) {
+    public void getOrders(OrderBo bo) {
         orderService.createOrder(bo);
     }
 
     @GetMapping("order")
-    public void showQueue() {
-        System.out.println(orderService.checkQueue("order-queue"));
+    public String showQueueSize() {
+        return producer.checkQueue("order-queue");
     }
 
 }
