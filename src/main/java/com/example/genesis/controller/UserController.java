@@ -43,4 +43,9 @@ public class UserController {
         return service.complete(id);
     }
 
+    @PostMapping("/trans")
+    public Boolean trans(@RequestParam Integer id) {
+        return service.transOrder(id);
+    }
+
 }

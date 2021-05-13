@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 public interface UserRepository extends JpaRepository<User, Integer> {
 
     @Transactional
@@ -27,4 +29,9 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Modifying
     @Query("update User u set u.orderId= null where u.id=:id")
     Integer clearOrder(Integer id);
+
+
+    @Query("SELECT u FROM User u WHERE u.status = 1 and u.orderId is null")
+    List<User> findOnlineUser();
+
 }

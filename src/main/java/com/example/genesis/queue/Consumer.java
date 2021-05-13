@@ -6,14 +6,10 @@ import com.example.genesis.service.UserService;
 import com.example.genesis.util.RedisSetUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.jms.annotation.JmsListener;
 import org.springframework.jms.core.JmsTemplate;
-import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import javax.jms.Message;
-import javax.jms.MessageListener;
 import javax.jms.ObjectMessage;
 import java.util.concurrent.CountDownLatch;
 
@@ -25,7 +21,7 @@ public class Consumer {
     private final OrderService orderService;
     private final RedisSetUtil redisSetUtil;
     private final JmsTemplate jmsTemplate;
-    private CountDownLatch latch = new CountDownLatch(1);
+    private final CountDownLatch latch = new CountDownLatch(1);
 
 
     /**
@@ -41,7 +37,7 @@ public class Consumer {
                 Order order = (Order) objectMessage.getObject();
                 if (order.getStatus() == 0) {
                     log.info("user: {} handle Received Message: {}", handlerId, order.toString());
-                    userService.updateOrderId(handlerId, order.getId());
+                    userService.distributeOrder(handlerId, order.getId());
                     orderService.updateOrderStatus(order.getId(), 1, handlerId);
                 }
                 latch.countDown();

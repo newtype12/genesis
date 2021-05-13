@@ -5,12 +5,8 @@ import com.example.genesis.data.entity.Order;
 import com.example.genesis.data.repository.OrderRepository;
 import com.example.genesis.queue.Producer;
 import lombok.RequiredArgsConstructor;
-import org.aspectj.weaver.ast.Or;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.stereotype.Service;
-
-import java.util.Enumeration;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -30,6 +26,10 @@ public class OrderService {
 
     public Integer updateOrderStatus(Integer orderId, Integer status, Integer userId) {
         return orderRepository.updateOrder(orderId, status, userId);
+    }
+
+    public Order findOrder(Integer orderId) {
+        return orderRepository.findById(orderId).get();
     }
 
 }

@@ -1,16 +1,14 @@
 package com.example.genesis.service;
 
+import com.example.genesis.data.entity.Order;
 import com.example.genesis.data.entity.User;
 import com.example.genesis.data.repository.UserRepository;
 import com.example.genesis.util.RedisSetUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.aop.framework.AopContext;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 
 @Service
@@ -31,6 +29,8 @@ public class UserService {
      * @return
      */
     public List<User> getUsers() {
+        redisSetUtil.check();
+
         return userRepository.findAll();
     }
 
@@ -49,6 +49,7 @@ public class UserService {
         if (result > 0) {
             User user = getUser(id);
             redisSetUtil.add(user.getRole(), id);
+            log.info("user {} is login", id);
             return user;
         }
         return null;
@@ -85,13 +86,13 @@ public class UserService {
     }
 
     /**
-     * 接單
+     * 分單
      *
      * @param userId
      * @param orderId
      * @return
      */
-    public Integer updateOrderId(Integer userId, Integer orderId) {
+    public Integer distributeOrder(Integer userId, Integer orderId) {
         return userRepository.updateOrder(userId, orderId);
     }
 
@@ -110,5 +111,60 @@ public class UserService {
             return redisSetUtil.popSet("role-3");
         }
         return 0;
+    }
+
+    /**
+     * 轉單給tl or pm
+     *
+     * @param id
+     * @return
+     */
+    public Boolean transOrder(Integer id) {
+
+        Integer toId = getUpperUserID();
+
+        if (toId > 0) {
+            User user = getUser(id);
+            Order order = orderService.findOrder(user.getOrderId());
+            //取得可轉單user
+            //
+
+            if (orderService.updateOrderStatus(user.getOrderId(), 1, toId) > 0) {
+
+                distributeOrder(toId, user.getOrderId());
+                userRepository.clearOrder(id);
+                redisSetUtil.add(user.getRole(), id);
+                log.info("user {}, trans orderId {} to {}", id, user.getOrderId(), toId);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * 取得可轉單user
+     *
+     * @return
+     */
+    public Integer getUpperUserID() {
+
+        if (redisSetUtil.getSetSize("role-2") > 0) {
+            return redisSetUtil.popSet("role-2");
+        } else if (redisSetUtil.getSetSize("role-3") > 0) {
+            return redisSetUtil.popSet("role-3");
+        }
+        return 0;
+    }
+
+    @PostConstruct
+    public void setLoginUser() {
+        List<User> users = userRepository.findOnlineUser();
+        if (users.size() > 0) {
+            System.out.println(users.size());
+            for (User user : users) {
+                redisSetUtil.add(user.getRole(), user.getId());
+            }
+        }
     }
 }
