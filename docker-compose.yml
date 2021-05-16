@@ -1,0 +1,18 @@
+version: "3.7"
+
+services:
+  genesis:
+    build: .
+    container_name: genesis
+    networks:
+      - web
+    ports:
+      - "8085:8085"
+
+  redis:
+    image: redis
+    container_name: redis
+    restart: always
+    command: --requirepass "123456"
+    ports:
+      - "6379:6379"
