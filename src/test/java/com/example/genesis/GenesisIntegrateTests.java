@@ -11,15 +11,11 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import redis.embedded.RedisServer;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @RunWith(SpringRunner.class)
@@ -29,6 +25,7 @@ class GenesisIntegrateTests {
     private static RedisServer redisServer;
     @Rule
     public EmbeddedActiveMQBroker broker = new EmbeddedActiveMQBroker();
+
     @BeforeAll
     static void startRedis() {
         // https://github.com/kstyrc/embedded-redis/issues/51
@@ -66,8 +63,8 @@ class GenesisIntegrateTests {
      */
     @Test
     public void testCreateOrder() {
-        OrderBo bo = new OrderBo("aaa","aaaaaa","aaasdasd");
-        for(int i=0;i<3;i++){
+        OrderBo bo = new OrderBo("aaa", "aaaaaa", "aaasdasd");
+        for (int i = 0; i < 3; i++) {
             template.postForObject("/v1/front/order", bo, String.class);
         }
 
@@ -111,10 +108,14 @@ class GenesisIntegrateTests {
      * @throws Exception
      */
     @Test
-    public void transToTL() throws Exception {
+    public void testTransToUpper() throws Exception {
         MultiValueMap<String, Integer> params = new LinkedMultiValueMap<>();
 
         params.add("id", 3);
+        template.postForObject("/v1/user/trans", params, String.class);
+        params.clear();
+        Thread.sleep(1000);
+        params.add("id", 2);
         template.postForObject("/v1/user/trans", params, String.class);
 
         System.out.println(template.getForObject("/v1/user/search/", String.class));
