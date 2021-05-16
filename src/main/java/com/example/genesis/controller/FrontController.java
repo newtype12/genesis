@@ -26,8 +26,8 @@ public class FrontController {
 
     private final Producer producer;
 
-    @PostMapping("order/create")
-    public void getOrders(OrderBo bo) {
+    @PostMapping("order")
+    public void createOrders(OrderBo bo) {
         orderService.createOrder(bo);
     }
 
