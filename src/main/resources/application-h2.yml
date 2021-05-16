@@ -7,10 +7,10 @@ spring:
         web-allow-others: true
         web-admin-password: 123456
   datasource:
-    url: jdbc:h2:file:./temp/data/h2;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=TRUE;MODE=MYSQL;DATABASE_TO_UPPER=false
+    url: jdbc:h2:mem:testdb;IFEXISTS=FALSE;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=TRUE;MODE=MYSQL;DATABASE_TO_UPPER=false
     driverClassName: org.h2.Driver
     hikari:
-      jdbc-url: jdbc:h2:file:./temp/data/h2;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=MYSQL;DATABASE_TO_UPPER=false
+      jdbc-url: jdbc:h2:mem:testdb;IFEXISTS=FALSE;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE;MODE=MYSQL;DATABASE_TO_UPPER=false
       username: sa
       password: 123456
       minimum-idle: 10

@@ -1,13 +1,5 @@
 -- 傾印  資料表 genesis.user 結構
-CREATE TABLE IF NOT EXISTS `user` (
-    `id` int(11) NOT NULL AUTO_INCREMENT,
-    `name` varchar(255) DEFAULT NULL,
-    `pw` varchar(255) DEFAULT NULL,
-    `role` int(255) DEFAULT NULL,
-    `status` int(11) DEFAULT NULL,
-    `order_id` int(11) DEFAULT NULL COMMENT '處理訂單中編號',
-    PRIMARY KEY (`id`)
-    ) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4;
+
 
 -- 正在傾印表格  genesis.user 的資料：~5 rows (近似值)
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
