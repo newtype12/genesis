@@ -82,6 +82,7 @@ public class UserService {
             log.info("user {}, complete order Id:{}", id, user.getOrderId());
             return true;
         }
+        log.info("user {}, not complete order Id:{}", id, user.getOrderId());
         return false;
     }
 
@@ -126,8 +127,6 @@ public class UserService {
         if (toId > 0) {
             User user = getUser(id);
             Order order = orderService.findOrder(user.getOrderId());
-            //取得可轉單user
-            //
 
             if (orderService.updateOrderStatus(user.getOrderId(), 1, toId) > 0) {
 
@@ -138,7 +137,7 @@ public class UserService {
                 return true;
             }
         }
-
+        log.info("no acceptable upper user");
         return false;
     }
 

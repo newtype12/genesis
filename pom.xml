@@ -16,6 +16,7 @@
 	<properties>
 		<java.version>11</java.version>
 		<swagger.version>2.9.2</swagger.version>
+		<activemq-junit-version>5.16.2</activemq-junit-version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -91,6 +92,18 @@
 			<artifactId>junit</artifactId>
 			<version>4.12</version>
 			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.activemq.tooling</groupId>
+			<artifactId>activemq-junit</artifactId>
+			<version>${activemq-junit-version}</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.activemq</groupId>
+			<artifactId>activemq-broker</artifactId>
 		</dependency>
 	</dependencies>
 
