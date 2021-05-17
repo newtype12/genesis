@@ -12,6 +12,6 @@ services:
     image: redis
     container_name: redis
     restart: always
-    command: --requirepass "123456"
+    command: --requirepass "admin123"
     ports:
       - "6379:6379"

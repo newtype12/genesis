@@ -3,8 +3,8 @@
 1. 建立工單時會塞到activemq內, 若有上線的使用者會自動分派
 2. 上線的使用者會依照腳色塞到redis作暫存   
 3. 接收工單的客服人員可以往上轉單給TL,若TL沒空的話會轉給PM
-3. verify階段可以打包出docker-compose.yml 與 Dockerfile, 若執行環境有docker-compose可直接啟動
-包含redis
+4. verify階段可以打包出docker-compose.yml 與 Dockerfile, 若執行環境有docker-compose可直接啟動 (包含redis)
+5. swagger: http://localhost:8085/swagger-ui.html
    
 API列表
 * FrontController
